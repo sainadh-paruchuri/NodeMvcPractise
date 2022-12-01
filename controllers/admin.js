@@ -59,17 +59,25 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll(products => {
+  Product.fetchAll().then(([rows])=>{
     res.render('admin/products', {
-      prods: products,
+      prods: rows,
       pageTitle: 'Admin Products',
       path: '/admin/products'
     });
-  });
+
+  })
+   
+  
 };
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteById(prodId);
-  res.redirect('/admin/products');
+  Product.deleteById(prodId).then(()=>{
+    res.redirect('/admin/products');
+  })
+  .catch(err=>{
+    console.log(err)
+  })
 };
+  
